@@ -49,41 +49,46 @@ class McCullochPittsNeuron:
         return f"Neuron(weights={self.weights}, threshold={self.threshold})"
 
 
-# Test the McCulloch and Pitts neuron
-def simulate_neuron():
-    # Example 1: Simple AND gate with 2 inputs
-    print("Simulating a McCulloch and Pitts Neuron for AND gate")
-    neuron = McCullochPittsNeuron(num_inputs=2, threshold=2)
+# Interactive function to get user input and simulate the neuron
+def simulate_interactive_neuron():
+    print("Welcome to the McCulloch and Pitts Neuron Simulation!")
 
-    # Test cases for AND gate behavior
-    test_cases = [
-        ([0, 0], 0),  # Expected output: 0
-        ([0, 1], 0),  # Expected output: 0
-        ([1, 0], 0),  # Expected output: 0
-        ([1, 1], 1)   # Expected output: 1
-    ]
+    # Step 1: Get the number of inputs from the user
+    num_inputs = int(input("Enter the number of inputs to the neuron: "))
 
-    for inputs, expected_output in test_cases:
-        output = neuron.forward(inputs)
-        print(f"Inputs: {inputs}, Output: {output}, Expected: {expected_output}")
+    # Step 2: Get the inputs from the user
+    inputs = []
+    for i in range(num_inputs):
+        inp = int(input(f"Enter binary input {i+1} (0 or 1): "))
+        while inp not in [0, 1]:  # Ensure the input is binary
+            print("Input must be 0 or 1.")
+            inp = int(input(f"Enter binary input {i+1} (0 or 1): "))
+        inputs.append(inp)
 
-    # Example 2: Custom neuron with custom weights
-    print("\nSimulating a neuron with custom weights and threshold")
-    custom_neuron = McCullochPittsNeuron(num_inputs=3, threshold=2)
-    custom_neuron.set_weights([1, 1, 1])  # Setting custom weights
+    # Step 3: Ask the user if they want custom weights
+    use_custom_weights = input("Do you want to provide custom weights? (y/n): ").lower() == 'y'
+    
+    # Step 4: Create the neuron and set the weights if needed
+    neuron = McCullochPittsNeuron(num_inputs=num_inputs)
 
-    # Test case for custom neuron
-    custom_test_cases = [
-        ([1, 0, 1], 1),  # Expected output: 1
-        ([0, 0, 1], 0),  # Expected output: 0
-        ([1, 1, 0], 1),  # Expected output: 1
-        ([0, 0, 0], 0)   # Expected output: 0
-    ]
+    if use_custom_weights:
+        weights = []
+        for i in range(num_inputs):
+            weight = int(input(f"Enter weight for input {i+1}: "))
+            weights.append(weight)
+        neuron.set_weights(weights)
 
-    for inputs, expected_output in custom_test_cases:
-        output = custom_neuron.forward(inputs)
-        print(f"Inputs: {inputs}, Output: {output}, Expected: {expected_output}")
+    # Step 5: Get the threshold from the user
+    threshold = int(input("Enter the threshold for the neuron: "))
+    neuron.threshold = threshold
+
+    # Display the current configuration
+    print(f"\nNeuron Configuration: {neuron}")
+
+    # Step 6: Compute the output based on user inputs
+    output = neuron.forward(inputs)
+    print(f"\nFor inputs {inputs}, the neuron output is: {output}")
 
 
 if __name__ == "__main__":
-    simulate_neuron()
+    simulate_interactive_neuron()
